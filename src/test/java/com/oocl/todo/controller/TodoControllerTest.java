@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -57,6 +58,25 @@ public class TodoControllerTest {
                 .andExpect((jsonPath("$[1].text")).value("I am todo item 2"))
                 .andExpect((jsonPath("$[1].done")).value(false));
     }
-    
+
+    @Test
+    void should_insert_todo_item_when_perform_post_given_todo_item() throws Exception {
+        // given
+        String todoItem = "    {\n" +
+                "        \"text\": \"I am todo item\"\n" +
+                "    }";
+
+        // when
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.post(TODO_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(todoItem))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect((jsonPath("$.text").value("I am todo item")))
+                .andExpect((jsonPath("$.done")).value(false));
+    }
+
+
 
 }
