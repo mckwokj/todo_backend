@@ -103,6 +103,27 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.text").value("I am todo item 3."))
                 .andExpect(jsonPath("$.done").value(false));
     }
+    
+    @Test
+    void should_delete_todo_item_when_delete_todo_item_given_id() throws Exception {
+        // given
+        TodoItem todoItem = new TodoItem();
+
+        todoItem.setDone(false);
+        todoItem.setText("I am todo item");
+
+        TodoItem todoItemInserted = todoRepository.insert(todoItem);
+        
+        // when
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.delete(TODO_ENDPOINT + "/{id}", todoItemInserted.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.id").value(todoItemInserted.getId()))
+                .andExpect(jsonPath("$.text").value("I am todo item"))
+                .andExpect(jsonPath("$.done").value(false));
+    }
+    
 
 
 
