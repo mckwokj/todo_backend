@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class TodoServiceTest {
@@ -145,6 +147,26 @@ public class TodoServiceTest {
         assertEquals(todoItem.isDone(), actual.isDone());
         assertEquals(todoItem.getText(), actual.getText());
         assertEquals(todoItem.getId(), actual.getId());
+    }
+
+    @Test
+    void should_delete_todo_item_when_delete_todo_item_given_id_and_todo_item() {
+        // given
+        TodoItem todoItem = new TodoItem();
+        todoItem.setText("I am todo item");
+        todoItem.setDone(false);
+        todoItem.setId("123");
+
+        given(todoRepository.findById(any()))
+                .willReturn(java.util.Optional.of(todoItem));
+
+        willDoNothing().given(todoRepository).deleteById(any());
+
+        // when
+        todoService.deleteTodoItem(todoItem.getId());
+
+        // then
+        verify(todoRepository).deleteById(todoItem.getId());
     }
 
     
