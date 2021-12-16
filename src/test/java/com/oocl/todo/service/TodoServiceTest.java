@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.oocl.todo.entity.TodoItem;
+import com.oocl.todo.exception.TodoItemNotFoundException;
 import com.oocl.todo.repository.TodoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -66,6 +68,26 @@ public class TodoServiceTest {
         assertEquals(todoItem.getText(), actual.getText());
 
     }
+
+    @Test
+    void should_throw_todo_item_not_found_exception_when_find_by_id_given_id() {
+        // given
+        String id = "123";
+
+        String exceptionMsg = "Todo item not found";
+
+        given(todoRepository.findById(id))
+                .willThrow(new TodoItemNotFoundException());
+
+        // when
+        // then
+        TodoItemNotFoundException todoItemNotFoundException = assertThrows(TodoItemNotFoundException.class, () -> {
+                todoService.findTodoItemById(id);
+        });
+
+        assertEquals(exceptionMsg, todoItemNotFoundException.getMessage());
+    }
+
 
     @Test
     void should_insert_todo_item_when_insert_todo_item_given_todo_item() {
@@ -168,6 +190,4 @@ public class TodoServiceTest {
         // then
         verify(todoRepository).deleteById(todoItem.getId());
     }
-
-    
 }
