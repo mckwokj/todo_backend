@@ -43,5 +43,27 @@ public class TodoServiceTest {
         assertEquals(todoItems.get(0).isDone(), actual.get(0).isDone());
         assertEquals(todoItems.get(0).getText(), actual.get(0).getText());
     }
+
+    @Test
+    void should_find_todo_item_when_find_by_id_given_todo_item() {
+        // given
+        TodoItem todoItem = new TodoItem();
+        todoItem.setText("I am todo item");
+        todoItem.setDone(false);
+        todoItem.setId("123");
+
+        given(todoRepository.findById(any()))
+                .willReturn(java.util.Optional.of(todoItem));
+
+        // when
+        TodoItem actual = todoService.findTodoItemById(todoItem.getId());
+
+        // then
+        assertEquals(todoItem, actual);
+        assertEquals(todoItem.isDone(), actual.isDone());
+        assertEquals(todoItem.getText(), actual.getText());
+
+    }
+
     
 }
