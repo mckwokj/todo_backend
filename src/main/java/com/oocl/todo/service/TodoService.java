@@ -41,4 +41,10 @@ public class TodoService {
 
         return todoRepository.save(todoItem);
     }
+
+    public TodoItem deleteTodoItem(String id) {
+        TodoItem todoItem = findTodoItemById(id);
+        todoRepository.deleteById(id);
+        return todoItem;
+    }
 }
