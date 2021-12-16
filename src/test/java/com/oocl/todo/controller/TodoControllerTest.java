@@ -52,8 +52,10 @@ public class TodoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect((jsonPath("$[0].text").value("I am todo item")))
+                .andExpect((jsonPath("$[0].done").value(false)))
                 .andExpect((jsonPath("$[1].id")).isString())
-                .andExpect((jsonPath("$[1].text")).value("I am todo item 2"));
+                .andExpect((jsonPath("$[1].text")).value("I am todo item 2"))
+                .andExpect((jsonPath("$[1].done")).value(false));
     }
     
 
