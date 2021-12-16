@@ -15,6 +15,9 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
+    public List<TodoItem> findAllTodoItems() {
+        return todoRepository.findAll();
+    }
 
     public TodoItem findTodoItemById(String id) {
         return todoRepository.findById(id).orElseThrow(TodoItemNotFoundException::new);
@@ -23,5 +26,19 @@ public class TodoService {
     public TodoItem insertTodoItem(TodoItem todoItem) {
         todoItem.setDone(false);
         return todoRepository.insert(todoItem);
+    }
+
+    public TodoItem updateTodoItem(String id, TodoItem updatedTodoItem) {
+        TodoItem todoItem = findTodoItemById(id);
+
+        if (updatedTodoItem.getText() != null) {
+            todoItem.setText(updatedTodoItem.getText());
+        }
+
+        if (updatedTodoItem.isDone() != null) {
+            todoItem.setDone(updatedTodoItem.isDone());
+        }
+
+        return todoRepository.save(todoItem);
     }
 }

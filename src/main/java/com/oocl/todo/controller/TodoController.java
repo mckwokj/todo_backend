@@ -31,4 +31,10 @@ public class TodoController {
     public TodoItem insertTodoItem(@RequestBody TodoItem todoItem) {
         return todoService.insertTodoItem(todoItem);
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TodoItem updateTodoItem(@PathVariable String id, @RequestBody TodoItemRequest todoItemRequest) {
+        return todoService.updateTodoItem(id, todoMapper.toEntity(todoItemRequest));
+    }
 }
