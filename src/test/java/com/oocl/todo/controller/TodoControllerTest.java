@@ -3,6 +3,7 @@ package com.oocl.todo.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import com.oocl.todo.dto.TodoItemRequest;
 import com.oocl.todo.entity.TodoItem;
 import com.oocl.todo.repository.TodoRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -76,6 +77,33 @@ public class TodoControllerTest {
                 .andExpect((jsonPath("$.text").value("I am todo item")))
                 .andExpect((jsonPath("$.done")).value(false));
     }
+
+    @Test
+    void should_update_todo_item_when_perform_put_given_id_and_todo_item_request_and_todo_items() throws Exception {
+        // given
+        TodoItem todoItem = new TodoItem();
+
+        todoItem.setDone(false);
+        todoItem.setText("I am todo item");
+
+        TodoItem todoItemInserted = todoRepository.insert(todoItem);
+
+        String updatedTodoItem = "    {\n" +
+                "        \"text\": \"I am todo item 3.\"\n" +
+                "    }";
+
+
+        // when
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.put(TODO_ENDPOINT + "/{id}", todoItemInserted.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedTodoItem))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.text").value("I am todo item 3."))
+                .andExpect(jsonPath("$.done").value(false));
+    }
+
 
 
 
