@@ -65,5 +65,25 @@ public class TodoServiceTest {
 
     }
 
+    @Test
+    void should_insert_todo_item_when_insert_todo_item_given_todo_item() {
+        // given
+        TodoItem todoItem = new TodoItem();
+        todoItem.setText("I am todo item");
+        todoItem.setDone(false);
+        todoItem.setId("123");
+
+        given(todoRepository.insert(any(TodoItem.class)))
+                .willReturn(todoItem);
+
+        // when
+        TodoItem actual = todoService.insertTodoItem(todoItem);
+
+        // then
+        assertEquals(todoItem, actual);
+        assertEquals(todoItem.isDone(), actual.isDone());
+        assertEquals(todoItem.getText(), actual.getText());
+    }
+
     
 }
