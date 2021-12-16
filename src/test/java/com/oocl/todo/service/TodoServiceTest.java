@@ -114,7 +114,37 @@ public class TodoServiceTest {
         assertEquals(todoItem.isDone(), actual.isDone());
         assertEquals(todoItem.getText(), actual.getText());
         assertEquals(todoItem.getId(), actual.getId());
+    }
 
+    @Test
+    void should_update_todo_item_done_status_when_update_todo_item_given_id_and_updated_todo_item_and_old_todo_item() {
+        // given
+        String id = "123";
+
+        TodoItem updatedTodoItem = new TodoItem();
+        updatedTodoItem.setDone(true);
+
+        TodoItem todoItem = new TodoItem();
+        todoItem.setText("I am todo item");
+        todoItem.setDone(false);
+        todoItem.setId("123");
+
+        given(todoRepository.findById(any()))
+                .willReturn(java.util.Optional.of(todoItem));
+
+        todoItem.setDone(true);
+
+        given(todoRepository.save(any()))
+                .willReturn(todoItem);
+
+        // when
+        TodoItem actual = todoService.updateTodoItem(id, updatedTodoItem);
+
+        // then
+        assertEquals(todoItem, actual);
+        assertEquals(todoItem.isDone(), actual.isDone());
+        assertEquals(todoItem.getText(), actual.getText());
+        assertEquals(todoItem.getId(), actual.getId());
     }
 
     
