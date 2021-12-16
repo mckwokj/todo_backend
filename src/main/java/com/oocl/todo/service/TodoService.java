@@ -19,4 +19,9 @@ public class TodoService {
     public TodoItem findTodoItemById(String id) {
         return todoRepository.findById(id).orElseThrow(TodoItemNotFoundException::new);
     }
+
+    public TodoItem insertTodoItem(TodoItem todoItem) {
+        todoItem.setDone(false);
+        return todoRepository.insert(todoItem);
+    }
 }

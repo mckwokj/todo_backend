@@ -25,4 +25,10 @@ public class TodoController {
     public List<TodoItem> findAllTodoItems() {
         return todoService.findAllTodoItems();
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TodoItem insertTodoItem(@RequestBody TodoItem todoItem) {
+        return todoService.insertTodoItem(todoItem);
+    }
 }
