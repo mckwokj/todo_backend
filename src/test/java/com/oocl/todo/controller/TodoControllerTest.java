@@ -79,7 +79,7 @@ public class TodoControllerTest {
     }
 
     @Test
-    void should_update_todo_item_when_perform_put_given_id_and_todo_item_request_and_todo_items() throws Exception {
+    void should_update_todo_item_text_when_perform_put_given_id_and_todo_item_request_and_todo_items() throws Exception {
         // given
         TodoItem todoItem = new TodoItem();
 
@@ -102,6 +102,32 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.text").value("I am todo item 3."))
                 .andExpect(jsonPath("$.done").value(false));
+    }
+
+    @Test
+    void should_update_todo_item_status_when_perform_put_given_id_and_todo_item_request_and_todo_items() throws Exception {
+        // given
+        TodoItem todoItem = new TodoItem();
+
+        todoItem.setDone(false);
+        todoItem.setText("I am todo item");
+
+        TodoItem todoItemInserted = todoRepository.insert(todoItem);
+
+        String updatedTodoItem = "    {\n" +
+                "        \"done\": \"true\"\n" +
+                "    }";
+
+
+        // when
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.put(TODO_ENDPOINT + "/{id}", todoItemInserted.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedTodoItem))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isString())
+                .andExpect(jsonPath("$.text").value("I am todo item"))
+                .andExpect(jsonPath("$.done").value(true));
     }
     
     @Test
