@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -139,15 +140,15 @@ public class TodoControllerTest {
         todoItem.setText("I am todo item");
 
         TodoItem todoItemInserted = todoRepository.insert(todoItem);
+
+        int size = todoRepository.findAll().size();
         
         // when
         // then
         mockMvc.perform(MockMvcRequestBuilders.delete(TODO_ENDPOINT + "/{id}", todoItemInserted.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").isString())
-                .andExpect(jsonPath("$.id").value(todoItemInserted.getId()))
-                .andExpect(jsonPath("$.text").value("I am todo item"))
-                .andExpect(jsonPath("$.done").value(false));
+                .andExpect(status().isNoContent());
+
+        assertEquals(--size, todoRepository.findAll().size());
     }
     
 
